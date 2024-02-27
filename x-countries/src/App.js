@@ -1,25 +1,49 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import "./App.css";
+import axios from "axios";
 
-function App() {
+const App = () => {
+  const [countries, setCountries] = useState([]);
+
+  const getData = async () => {
+    try {
+      let response = await axios.get("https://restcountries.com/v3.1/all");
+      console.log(response.data);
+      setCountries(response.data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const wrapper = {
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "center",
+    alignItems: "center",
+    height: "100vh",
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div style={wrapper}>
+      {" "}
+      {countries.map((item) => (
+        <div key={item.cca3} className="card">
+          <img
+            src={item.flags.png}
+            alt={`Flag of ${item.name.common}`}
+            style={{ width: "100px", height: "100px" }}
+            width="100"
+            height="100"
+          />
+          <h2> {item.name.common} </h2>{" "}
+        </div>
+      ))}{" "}
     </div>
   );
-}
+};
 
 export default App;
